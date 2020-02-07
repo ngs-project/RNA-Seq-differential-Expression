@@ -92,14 +92,17 @@ for file in ./*.bam;
   
  # Step 1 Indexing
   REF_ERCC=./Homo_sapiens.GRCh38.dna.chromosome.11.fa 
-   INDEX_ERCC=./Homo_sapiens.GRCh38.dna.chromosome.11
+  INDEX_ERCC=./Homo_sapiens.GRCh38.dna.chromosome.11
 
  hisat2-build $REF_ERCC $INDEX_ERCC
-  INDEX=~/workdir/diff_exp/ref/ERCC92
- INDEX=~/Diff_proj/index/Homo_sapiens.GRCh38.dna.chromosome.11
-   RUNLOG=runlog.txt
- READS_DIR=~/workdir/sample_data/
-  READS_DIR=~/Diff_proj/sample_data/
+ 
+ INDEX=~/workdir/diff_exp/ref/ERCC92
+ NDEX=~/Diff_proj/index/Homo_sapiens.GRCh38.dna.chromosome.11
+
+RUNLOG=runlog.txt
+
+READS_DIR=~/workdir/sample_data/
+ READS_DIR=~/Diff_proj/sample_data/
 
  
 # Step 2 (Alignment)
@@ -122,8 +125,8 @@ for file in ./*.bam;
  R1=$READS_DIR/${SAMPLE}_SRR5${REPLICATE}*r1.fastq;     
  R2=$READS_DIR/${SAMPLE}_SRR5${REPLICATE}*r2.fastq;        
  BAM=bam/${SAMPLE}_${REPLICATE}.bam;        
- hisat2 $INDEX -1 $R1 -2 $R2 | samtools sort > $BAM;    
- samtools index $BAM;  
+ hisat2 $INDEX -1 $R1 -2 $R2 | samtools sort > $BAM
+ samtools index $BAM 
  done; 
  done
 
