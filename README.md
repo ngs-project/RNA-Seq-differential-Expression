@@ -44,7 +44,7 @@ install.packages("tidyverse", repos = 'https://cran.us.r-project.org')
 ##getting subsets of files as the other one is very large 
        tar xvzf airway_1.6.0.tar.gz 
 
-##the files are in BAM already so convert it to Sam 
+# the files are in BAM already so convert it to Sam 
  
  for file in ./*.bam;
    do    
@@ -59,13 +59,13 @@ for file in ./*.bam;
        echo $file ; samtools view -h $file > ${file/.bam/.sam};
      done
 
- #convert bam file to fastq
+ ##convert bam file to fastq
    for file in ./*.bam;
       do 
         echo $file ; samtools bam2fq *.bam > *.fastq
       done
      
-# extracting reads ending with '/1' or '/2'
+##extracting reads ending with '/1' or '/2'
     for file in ./*.fastq
      do
        cat ./*.fastq | grep '^@.*/1$' -A 3 --no-group-separator > r1.fastq
