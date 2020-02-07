@@ -1,6 +1,6 @@
 # RNA-Seq-differential-Expression
  we perform  data analysis for quality assessment relationship we between samples, perform differential gene expression analysis, and visually explore the results.
- [](https://github.com/ngs-project/RNA-Seq-differential-Expression/blob/master/RNA-seq_Flowchart2.png)
+ [](image/https://github.com/ngs-project/RNA-Seq-differential-Expression/blob/master/RNA-seq_Flowchart2.png)
  
 
 Download reference Genomes
@@ -11,9 +11,12 @@ Obtain a reference genome from Ensembl, iGenomes, NCBI or UCSC. In this example 
  
  # Data retrieval for fastq files :
   wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR103/008/SRR1039508/SRR1039508_1.fastq.gz
+  
   conda activate ngs1
- prefetch SRR1039508
+
+prefetch SRR1039508
  fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR1039508
+ 
  prefetch SRR1039509
  fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR1039509
  
