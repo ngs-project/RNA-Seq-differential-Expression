@@ -1,7 +1,7 @@
 # RNA-Seq-differential-Expression
  we perform  data analysis for quality assessment relationship we between samples, perform differential gene expression analysis, and visually explore the results.
 
-#Download reference Genomes
+Download reference Genomes
 Obtain a reference genome from Ensembl, iGenomes, NCBI or UCSC. In this example analysis we will use the human GRCh38 version of the genome from Ensembl.  
 
 # getting the ref in gtf format 
@@ -21,29 +21,31 @@ Obtain a reference genome from Ensembl, iGenomes, NCBI or UCSC. In this example 
   fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR1039509
  
 # Setup enviornemnt (preparing R)
-  ls
-  wget https://download1.rstudio.org/rstudio-xenial-1.1.419-amd64.deb
-  sudo gdebi rstudio-xenial-1.1.379-amd64.deb
+
   conda activate ngs1
+  
   wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR103/003/SRR1039523/SRR1039523_1.fastq.gz
  
   sudo apt-get install libopenblas-base r-base
+  
   sudo apt-get install gdebi
-  cd ~/Downloads
-  wget https://download1.rstudio.org/rstudio-xenial-1.1.419-amd64.deb
+  
+ ls
+ wget https://download1.rstudio.org/rstudio-xenial-1.1.419-amd64.deb
+  
   sudo gdebi rstudio-xenial-1.1.379-amd64.deb
-  wget https://download1.rstudio.org/rstudio-xenial-1.1.419-amd64.deb
-  sudo gdebi rstudio-xenial-1.1.379-amd64.deb
-  ls
-  sudo gdebi rstudio-xenial-1.1.419-amd64.deb
+  
    R
-  {r install-tidyverse, eval = F}
+
+{r install-tidyverse, eval = F}
+
 install.packages("tidyverse", repos = 'https://cran.us.r-project.org')
 
 ##getting subsets of files as the other one is very large 
        tar xvzf airway_1.6.0.tar.gz 
 
 ##the files are in BAM already so convert it to Sam 
+ 
  for file in ./*.bam;
    do    
        echo $file ;     samtools view -h $file > ${file/.bam/.sam};
@@ -51,7 +53,8 @@ install.packages("tidyverse", repos = 'https://cran.us.r-project.org')
  
   conda activate ngs1
   samtools
-  for file in ./*.bam;
+
+for file in ./*.bam;
      do  
        echo $file ; samtools view -h $file > ${file/.bam/.sam};
      done
