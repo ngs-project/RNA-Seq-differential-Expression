@@ -1,8 +1,6 @@
 # RNA-Seq-differential-Expression
  we perform  data analysis for quality assessment relationship we between samples, perform differential gene expression analysis, and visually explore the results.
- [](image/https://github.com/ngs-project/RNA-Seq-differential-Expression/blob/master/RNA-seq_Flowchart2.png)
  
-
 Download reference Genomes
 Obtain a reference genome from Ensembl, iGenomes, NCBI or UCSC. In this example analysis we will use the human GRCh38 version of the genome from Ensembl.  
 
