@@ -13,9 +13,11 @@ Obtain a reference genome from Ensembl, iGenomes, NCBI or UCSC. In this example 
   conda activate ngs1
   
   prefetch SRR1039508
+  
    fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR1039508
  
  prefetch SRR1039509
+ 
   fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR1039509
  
 # Setup enviornemnt (preparing R)
