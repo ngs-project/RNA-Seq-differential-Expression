@@ -71,3 +71,15 @@ for file in ./*.bam;
        cat ./*.fastq | grep '^@.*/1$' -A 3 --no-group-separator > r1.fastq
        cat ./*.fastq | grep '^@.*/2$' -A 3 --no-group-separator > r2.fastq
      done
+   
+
+ 
+ # Prepare and download the data
+   mkdir -p ~/workdir/diff_exp && cd ~/workdir/diff_exp/
+   conda activate ngs1
+  wget -c https://0x0.st/zK57.gz -O ref.tar.gz
+  tar xvzf ref.tar.gz
+   wget -c https://raw.githubusercontent.com/mr-eyes/nu-ngs01/master/Day-6/deseq1.r
+   wget -c https://raw.githubusercontent.com/mr-eyes/nu-ngs01/master/Day-6/draw-heatmap.r
+   cat ref | cd ref
+   
