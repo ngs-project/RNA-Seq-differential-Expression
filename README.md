@@ -8,6 +8,13 @@ Obtain a reference genome from Ensembl, iGenomes, NCBI or UCSC. In this example 
   wget http://ftp.ensembl.org/pub/release-75/gtf/homo_sapiens/Homo_sapiens.GRCh37.75.gtf.gz
  
  # Data retrieval for fastq files :
+  wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR103/008/SRR1039508/SRR1039508_1.fastq.gz
+  conda activate ngs1
+ prefetch SRR1039508
+ fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR1039508
+ prefetch SRR1039509
+ fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR1039509
+ 
  
 # Setup enviornemnt (preparing R)
 
@@ -65,22 +72,22 @@ for file in ./*.bam;
    git init
 
 # downloading ref genome , Trying to get the ref genome for the specifyed regions
- 1234  wget https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13
- 1235  wget Homo_sapiens.GRCh37.75_subset.fa.gz
+  wget https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13
+  wget Homo_sapiens.GRCh37.75_subset.fa.gz
  
- 1237  less SRR1039508_subset.sam 
- 1238  less SRR1039509_subset.sam 
- 1239  fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR1039508
- 1240  gunzip -k Homosapiens_GRCh37.fa.gz 
- 1241  less SRR1039508_subset.bam 
- 1242  wget ftp://ftp.ensembl.org/pub/release-86/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.11.fa.gz
- 1243  gunzip -k Homo_sapiens.GRCh38.dna.chromosome.11.fa.gz 
+   less SRR1039508_subset.sam 
+  less SRR1039509_subset.sam 
+   fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR1039508
+  gunzip -k Homosapiens_GRCh37.fa.gz 
+   less SRR1039508_subset.bam 
+  wget ftp://ftp.ensembl.org/pub/release-86/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.11.fa.gz
+   gunzip -k Homo_sapiens.GRCh38.dna.chromosome.11.fa.gz 
  
- 1245  head Homo_sapiens.GRCh38.dna.chromosome.11.fa
- 1246  wc chr22_with_ERCC92.fa
- 1247  wc Homo_sapiens.GRCh38.dna.chromosome.11.fa
- 1248  head -n 425000 Homo_sapiens.GRCh38.dna.chromosome.11.fa | tail
- 1249  cat Homo_sapiens.GRCh38.dna.chromosome.11.fa |  grep -v ">" | perl -ne 'chomp $_; $bases{$_}++ for split //; if (eof){print "$_ $bases{$_}\n" for sort keys %bases}'
+  head Homo_sapiens.GRCh38.dna.chromosome.11.fa
+   wc chr22_with_ERCC92.fa
+  wc Homo_sapiens.GRCh38.dna.chromosome.11.fa
+   head -n 425000 Homo_sapiens.GRCh38.dna.chromosome.11.fa | tail
+  cat Homo_sapiens.GRCh38.dna.chromosome.11.fa |  grep -v ">" | perl -ne 'chomp $_; $bases{$_}++ for split //; if (eof){print "$_ $bases{$_}\n" for sort keys %bases}'
 
   
  # Step 1 Indexing
