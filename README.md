@@ -4,7 +4,7 @@ Obtain a reference genome from Ensembl, iGenomes, NCBI or UCSC. In this example 
   wget http://ftp.ensembl.org/pub/release-75/gtf/homo_sapiens/Homo_sapiens.GRCh37.75.gtf.gz
  
  # Data retrieval for fastq files :
-  $wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR103/008/SRR1039508/SRR1039508_1.fastq.gz
+  $ wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR103/008/SRR1039508/SRR1039508_1.fastq.gz
   
   conda activate ngs1
   prefetch SRR1039508
