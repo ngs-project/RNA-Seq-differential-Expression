@@ -1,164 +1,206 @@
-# RNA-Seq-differential-Expression 
-Download reference Genomes
-Obtain a reference genome from Ensembl, iGenomes, NCBI or UCSC. In this example analysis we will use the human GRCh38 version of the genome from Ensembl.  
- 
- wget http://ftp.ensembl.org/pub/release-75/gtf/homo_sapiens/Homo_sapiens.GRCh37.75.gtf.gz
- 
- # Data retrieval for fastq files :
-  $ wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR103/008/SRR1039508/SRR1039508_1.fastq.gz
-  
- $ conda activate ngs1
-  prefetch SRR1039508
-  
-  fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR1039508
- 
- prefetch SRR1039509
- 
- fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR1039509
- 
- 
-# Setup enviornemnt (preparing R)
 
-  conda activate ngs1
-  
-  wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR103/003/SRR1039523/SRR1039523_1.fastq.gz
+Aim :using the bioinformatic tools investigating the outbreak by assembling the genome of the deadly E. coli X strain. Specifically, we will provide you with Illumina reads from the TY2482 sample, which were generated at Beijing Genome Institute and deposited into the Short Read Archive (SRA) for public access.
  
-  sudo apt-get install libopenblas-base r-base
-  
-  sudo apt-get install gdebi
-  
- wget https://download1.rstudio.org/rstudio-xenial-1.1.419-amd64.deb
-  
-  sudo gdebi rstudio-xenial-1.1.379-amd64.deb
-  
-   R
+ *[Data Retrieval](**url**)**
+NCBI’s fastq-dump from sra-toolkit was used to download the short reads for NCBI short read archive (SRA).
 
-{r install-tidyverse, eval = F}
+#Using SRA-toolkit
+```
+ prefetch SRR292678
+  fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR292678.sra
 
-install.packages("tidyverse", repos = 'https://cran.us.r-project.org')
+```
+**[Prepare the referance data](url)**
+```
+mkdir -p ~/workdir/sample_data
+   cd ~/workdir/sample_data
 
-##getting subsets of files as the other one is very large 
-       tar xvzf airway_1.6.0.tar.gz 
-
-# the files are in BAM already so convert it to Sam 
+wget GCF_000221885.1_E.coli_0104_H4_Illumina_1.0_cds_from_genomic.fna.gz
+ cp GCF_000221885.1_E.coli_0104_H4_Illumina_1.0_genomic.fna GCF_000221885.1_E.coli_0104_H4_Illumina_1.0_genomic.fa
  
- for file in ./*.bam;
-   do    
-       echo $file ;     samtools view -h $file > ${file/.bam/.sam};
-   done
- 
-  conda activate ngs1
-  samtools
-
-for file in ./*.bam;
-     do  
-       echo $file ; samtools view -h $file > ${file/.bam/.sam};
-     done
-
- ##convert bam file to fastq
-   for file in ./*.bam;
-      do 
-        echo $file ; samtools bam2fq *.bam > *.fastq
-      done
-     
-##extracting reads ending with '/1' or '/2'
-    for file in ./*.fastq
-     do
-       cat ./*.fastq | grep '^@.*/1$' -A 3 --no-group-separator > r1.fastq
-       cat ./*.fastq | grep '^@.*/2$' -A 3 --no-group-separator > r2.fastq
-     done
+ ` wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/221/885/GCF_000221885.1_E.coli_0104_H4_Illumina_1.0/GCF_000221885.1_E.coli_0104_H4_Illumina_1.0_genomic.gtf
+```
+[**Indexing**](url)
+****```
+  mkdir -p ~/workdir/hisat_align/hisatIndex 
+ cd ~/workdir/hisat_align/hisatIndex
    
-#initiating githup repo
-   cd git_one/
-   git init
+ln -s ~/workdir/sample_data/GCF_000221885.1_E.coli_0104_H4_Illumina_1.0/GCF_000221885.1_E.coli_0104_H4_Illumina_1.0_genomic.fa
+  
+ hisat2_extract_splice_sites.py ~/workdir/sample_data/GCF_000221885.1_E.coli_0104_H4_Illumina_1.0/GCF_000221885.1_E.coli_0104_H4_Illumina_1.0_genomic.gtf
+  
+  hisat2_extract_splice_sites.py ~/workdir/sample_data/GCF_000221885.1_E.coli_0104_H4_Illumina_1.0/GCF_000221885.1_E.coli_0104_H4_Illumina_1.0_genomic.gtf > splicesites.tsv
+   
+  less SGCF-000221885.1_E.coli_0104_H4_illumina_1.0_genomic.fna 
+ 
+  ln -s ~/workdir/sample_data/ ln -s ~/workdir/sample_data/SGCF-000221885.1_E.coli_0104_H4_illumina_1.0_genomic.fna .
+```
+ [ install Hisat](url)
+#try to install hisat2 in linux
+```
+sudo apt_get install hisat2
+ sudo apt install hisat2
 
-# downloading ref genome , Trying to get the ref genome for the specifyed regions
-  wget https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13
-  wget Homo_sapiens.GRCh37.75_subset.fa.gz
+```
+ ```
+ mkdir -p ~/workdir/hisat_align/hisatIndex && cd ~/workdir/hisat_align/hisatIndex
+   hisat2_extract_splice_sites.py ~/workdir/sample_data/GCF_000221885.1_E.coli_0104_H4_Illumina_1.0/GCF_000221885.1_E.coli_0104_H4_Illumina_1.0_genomic.gtf > splicesites.tsv
+    hisat2_extract_splice_sites.py 
+    hisat2_extract_splice
+  hisat2 --help
+ ##(Troubleshooting)
+```
+
+[
+ install BWA on a Linux](url)
+  bunzip2 bwa-0.5.9.tar.bz2
+  bunzip2 bwa-0.7.17.tar.bz2 
+   tar xvf bwa-0.5.9.tar
+  tar xvf bwa-0.7.17.tar
+  cd bwa-0.5.9
+  cd bwa-0.7.17
+    make
+ export PATH=$PATH:/Downloads/to/bwa-0.7.17 
+   source ~/.bashrc (troubleshooting)
+
+[*install bwa](url)
+ ```
+ sudo apt-get install bwa
+```
+[**index my genome**](url)
+```
+ mkdir -p ~/workdir/bwa_align/bwaIndex 
+ cd ~/workdir/bwa_align/bwaIndex
+
+  ln -s ~/workdir/sample_data/SGCF-000221885.1_E.coli_0104_H4_illumina_1.0_genomic.fna .
+   bwa index -a bwtsw GCF-000221885.1_E.coli_0104_H4_illumina_1.0_genomic.fna
  
-   less SRR1039508_subset.sam 
-  less SRR1039509_subset.sam 
-   fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR1039508
-  gunzip -k Homosapiens_GRCh37.fa.gz 
-   less SRR1039508_subset.bam 
-  wget ftp://ftp.ensembl.org/pub/release-86/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.11.fa.gz
-   gunzip -k Homo_sapiens.GRCh38.dna.chromosome.11.fa.gz 
- 
-  head Homo_sapiens.GRCh38.dna.chromosome.11.fa
-   wc chr22_with_ERCC92.fa
-  wc Homo_sapiens.GRCh38.dna.chromosome.11.fa
-   head -n 425000 Homo_sapiens.GRCh38.dna.chromosome.11.fa | tail
-  cat Homo_sapiens.GRCh38.dna.chromosome.11.fa |  grep -v ">" | perl -ne 'chomp $_; $bases{$_}++ for split //; if (eof){print "$_ $bases{$_}\n" for sort keys %bases}'
+```
+[[**[sequence](url) alignment](url)**](url)
+ cd ~/workdir/bwa_align
+  R1="$/home/crizma/Desktop/ngs/project e.coli/NEW R1 & R2/fastq/SRR292678_pass_1.fastq.gz"
+  R2="$/home/crizma/Desktop/ngs/project e.coli/NEW R1 & R2/fastq/SRR292678_pass_2.fastq.gz"
+    /usr/bin/time -v bwa mem bwaIndex/GCF_000221885.1_E.coli_0104_H4_illumina_1.0_genomic.fna $R1 $R2 > /SRR292678.sam
+   bwa mem bwaIndex/GCF_000221885.1_E.coli_0104_H4_illumina_1.0_genomic.fna $R1 $R2 > /SRR292678.sam
+  bwa mem bwaIndex/GCF_000221885.1_E.coli_0104_H4_illumina_1.0_genomic.fna $R1 $R2 > SRR292678.sam
+    ls
+-the sam file was empty (troubleshooting)
 
   
- # Step 1 Indexing
-  REF_ERCC=./Homo_sapiens.GRCh38.dna.chromosome.11.fa 
-  INDEX_ERCC=./Homo_sapiens.GRCh38.dna.chromosome.11
+  ```
+ cd ~/workdir/bwa_align
+  R1="$HOME/workdir/sample_data/SRR292678_pass_1.fastq.gz" 
+  cat $R1
+  ln -s ~/workdir/sample_data/GCF_000221885.1_E.coli_0104_H4_Illumina_1.0_genomic.fa .
+  bwa index -a bwtsw GCF_000221885.1_E.coli_0104_H4_Illumina_1.0_genomic.fa
+    cd ~/workdir/bwa_align
+  R1="$HOME/workdir/sample_data/SRR292678_pass_1.fastq.gz" 
+ R2="$HOME/workdir/sample_data/SRR292678_pass_2.fastq.gz" 
 
- hisat2-build $REF_ERCC $INDEX_ERCC
+```
+  bwa mem bwaIndex/GCF_000221885.1_E.coli_0104_H4_Illumina_1.0_genomic.fa $R1 $R2 > SRR292678.sam
+  /usr/bin/time -v bwa mem bwaIndex/GCF_000221885.1_E.coli_0104_H4_Illumina_1.0_genomic.fa $R1 $R2 > SRR678.SAM
+
+  head -n10 SRR678.SAM 
+  head -n100 SRR678.SAM 
+   head -n200 SRR678.SAM 
+   
+conda install -c conda-forge -y biopython
+    conda install -y samtools
+[   # install Samtools](url)
+  ` sudo apt install samtools`
+ # convert SAM file to BAM
+ `samtools view -S -b SRR678.SAM -o SRR678.bam
  
- INDEX=~/workdir/diff_exp/ref/ERCC92
- NDEX=~/Diff_proj/index/Homo_sapiens.GRCh38.dna.chromosome.11
+```
 
-RUNLOG=runlog.txt
+[# Sorting the BAM file](url)
+```
+samtools sort SRR678.bam -o sorted_SRR678.bam
+  head -n10 sorted_SRR678.bam
+```
+```
+```
 
-READS_DIR=~/workdir/sample_data/
- READS_DIR=~/Diff_proj/sample_data/
-
+[# Indexing the BAM file](url)
+```
+`samtools index sorted_SRR678.bam`
  
-# Step 2 (Alignment)
- for SAMPLE in SRR508 SRR509 SRR512 SRR513 SRR516 SRR517 SRR520 SRR521 ; 
-    do    
- for REPLICATE in 1 2 3 4 5 6 7 8 ;    
-    do         
- R1=$READS_DIR/${SAMPLE}_Rep${REPLICATE}*read1.fastq.gz;       
- R2=$READS_DIR/${SAMPLE}_Rep${REPLICATE}*read2.fastq.gz;       
- BAM=bam/${SAMPLE}_${REPLICATE}.bam;         
- hisat2 $INDEX -1 $R1 -2 $R2 | samtools sort > $BAM;      
- samtools index $BAM;  
-    done; 
-    done
- 
- for SAMPLE in UNT TTT ; 
- do    
- for REPLICATE in 08 09 12 13 16 17 20 21;    
- do       
- R1=$READS_DIR/${SAMPLE}_SRR5${REPLICATE}*r1.fastq;     
- R2=$READS_DIR/${SAMPLE}_SRR5${REPLICATE}*r2.fastq;        
- BAM=bam/${SAMPLE}_${REPLICATE}.bam;        
- hisat2 $INDEX -1 $R1 -2 $R2 | samtools sort > $BAM
- samtools index $BAM 
- done; 
- done
 
-# Step 3 (Quantification)
- 
-   #GTF=~/workdir/diff_exp/ref/ERCC92.gtf
-   GTF=~/Diff_proj/Homo_sapiens.GRCh37.75_subset.gtf 
+```
+in this point i stoped this project as i join to another group
 
-  conda install ngs1
- conda activate ngs1
-cd Diff_proj/ 'bamfiles(copy)'/
+
+project troubleshooting
   
+ project1
+TCRLAMC PCR Sezary Limiting dilution PB cDNA 1000ng Beta chain
+Prepare the [data**](url)
+Download the reference genome from Ensembl and use the human GRCh38 version of the genome.
+`wget http://ftp.ensembl.org/pub/release-75/gtf/homo_sapiens/Homo_sapiens.GRCh37.75.gtf.gz`
+
+[retrival of data ](url)
+```
+sudo apt-get install sra-toolkit
+perfetch SRR5809585
+fastq dump  SRR5809585
+head -n5000000 SRR5809585.fastq  > SRR585.fastq
+ fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR585.fastq 
+```
+
+**install fastqc**
+ ```
+wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip
+  gunzip fastqc_v0.11.9.zip 
+   chmod a+x *
+  ./fastqc
+  sudo apt-get install openjdk-8-jre-headless
+    ./fastqc
+   sudo apt-get install openjdk-8-jre-headless
+   ./fastqc
+    sudo apt-get install openjdk-8-jre-headless
+    ./fastqc
+   java -version
+  sudo apt-get install openjdk-8-jre-headless
+   ./fastqc
+```
+ using the fastqc tools this data is bad.
+
+**project2- genome sequence of Rosa chinensis to elucidate ornamental [traits](**url**)**
  
- ##Generate the counts.
-  featureCounts -a $GTF -g gene_name -o counts.txt  Bam_org/UNT*.bam  Bam_org/TTT*.bam
-##Simplify the file to keep only the count columns.
-  cat counts.txt | cut -f 1,7-12 > simple_counts.txt
-  Head
-   head results_deseq1.tsv 
-  conda activate ngs1
-  # Analyze the counts with DESeq1.
-   cat simple_counts.txt | Rscript deseq1.r 3x3 > results_deseq1.tsv
-   # View only rows with pval < 0.05
-  cat results_deseq1.tsv | awk ' $8 < 0.05 { print $0 }' > filtered_results_deseq1.tsv
-  cat filtered_results_deseq1.tsv | Rscript draw-heatmap.r > hisat_output.pdf
-  head filtered_results_deseq1.tsv 
+```
+perfetch SRR6449591
+fast dump SRR6449591
+ head -n5000000 SRR6449591.fastq > SRR91.fastq
+ fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR585.fastq 
+
+```
+visualize the quality of data by fastqc
+the data is  bad also.(trouble shooting)
+
+[project 3](**url**)
+
+```
+Download the reference genome from Ensembl and use the human GRCh38 version of the genome.
+prepare the reference data`
+wget http://ftp.ensembl.org/pub/release-75/gtf/homo_sapiens/Homo_sapiens.GRCh37.75.gtf.gz`
+[prefetch SRR2079547
+ fastq-dump SRR2079547.sra 
+head -n SRR2079547.fastq 
+ head -n 50 SRR2079547.fastq 
+  wc -l SRR2079547.fastq 
+fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR2079547.fastq 
+```
+the data is too large
+` 
+
+
+
+
 
  
 
- 
- 
+  
  
  
 
